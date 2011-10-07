@@ -34,6 +34,21 @@ module SessionsHelper
     redirect_to(session[:return_to]||default)
     clear_return_to
   end
+
+  def authenticate
+    deny_access unless signed_in?
+  end
+
+  def correct_user
+    @user = User.find(params[:id])
+    redirect_to(root_path) unless current_user?(@user)
+  end
+
+  def admin_user
+    redirect_to(root_path) unless current_user.admin?
+  end
+
+
  private
 
   def user_from_remember_token
